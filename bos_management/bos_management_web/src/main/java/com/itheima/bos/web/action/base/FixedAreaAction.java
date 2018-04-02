@@ -63,7 +63,7 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         Page<FixedArea> page = fixedAreaService.findAll(pageable);
 
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"subareas", "couriers"});
+        jsonConfig.setExcludes(new String[] {"subareas", "couriers" });
 
         page2json(page, jsonConfig);
         return NONE;

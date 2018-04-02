@@ -67,6 +67,50 @@
 		})
 
 	}
+	
+	// 导出区域柱形图
+	function doExportfigure() {
+		// 打开窗口
+		$("#figureWindow").window("open");
+		// 发起请求
+		$.post("../../areaAction_exportfigure.action", function(data) {
+			console.log(data);
+			 $('#containers').highcharts({
+			        chart: {
+			            type: 'column'
+			        },
+			        title: {
+			            text: '省会各区域汇总'
+			        },
+			        xAxis: {
+			            categories: [
+			                "省会"
+			            ],
+			            crosshair: true
+			        },
+			        yAxis: {
+			            min: 0,
+			            title: {
+			                text: '区域数量'
+			            }
+			        },
+			        tooltip: {
+			            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+			            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+			            '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+			            footerFormat: '</table>',
+			            shared: true,
+			            useHTML: true
+			        },
+			        plotOptions: {
+			            column: {
+			                borderWidth: 0
+			            }
+			        },
+			        series: data
+			    });
+		});
+	}
 
 	//工具栏
 	var toolbar = [ {
@@ -103,7 +147,12 @@
 		text : '导出PDF',
 		iconCls : 'icon-redo',
 		handler : doExportPDF
-	} ];
+	} , {
+		id : 'button-export',
+		text : '导出柱形图',
+		iconCls : 'icon-redo',
+		handler : doExportfigure
+	}];
 	// 定义列
 	var columns = [ [ {
 		field : 'id',
@@ -180,6 +229,14 @@
 		});
 
 		$('#chartWindow').window({
+			width : 700,
+			modal : true,
+			shadow : true,
+			closed : true,
+			height : 600,
+			resizable : false
+		});
+		$('#figureWindow').window({
 			width : 700,
 			modal : true,
 			shadow : true,
@@ -270,6 +327,13 @@
 		collapsible="false" minimizable="false" maximizable="false"
 		style="top: 20px; left: 200px">
 		<div id="container" style="min-width: 400px; height: 400px"></div>
+	</div>
+	
+	<div class="easyui-window" title="区域分布图(柱形图)" id="figureWindow"
+		collapsible="false" minimizable="false" maximizable="false"
+		style="top: 20px; left: 200px">
+		<div id="containers" style="min-width: 400px; height: 400px"></div>
+		
 	</div>
 
 

@@ -1,5 +1,6 @@
 package com.itheima.bos.service.base;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -21,6 +22,8 @@ public interface SubAreaService {
     List<SubArea> findUnAssociatedSubAreas();
 
     List<SubArea> findAssociatedSubAreas(Long fixedAreaId);
+
+    List<LinkedHashMap<String, Object>> exportfigure();
 
 }
   

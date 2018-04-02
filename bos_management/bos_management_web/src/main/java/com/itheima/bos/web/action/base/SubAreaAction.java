@@ -1,8 +1,12 @@
 package com.itheima.bos.web.action.base;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -59,7 +63,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
         Page<SubArea> page = subAreaService.findAll(pageable);
 
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"subareas"});
+        jsonConfig.setExcludes(new String[] {"subareas", "couriers"});
 
         page2json(page, jsonConfig);
         return NONE;
@@ -87,5 +91,19 @@ public class SubAreaAction extends CommonAction<SubArea> {
         list2json(list, jsonConfig);
         return NONE;
     }
-
+    
+    /**
+     * 区域数据柱状图
+     */
+    @Action(value = "subAreaAction_exportfigure")
+    public String exportfigure() throws IOException {
+        List<LinkedHashMap<String, Object>> list = subAreaService.exportfigure();
+        String json = com.alibaba.fastjson.JSONObject.toJSONString(list);
+        System.out.println(json);
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
+        return NONE;
+    }
+    
 }

@@ -1,6 +1,8 @@
 package com.itheima.bos.service.base;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,12 @@ public interface AreaService {
     List<Area> findByQ(String q);
 
     List<Object[]> exportCharts();
+
+    List<LinkedHashMap<String, Object>> exportfigure();
+
+    /*Map<String, String> exportfigure();*/
+
+    
 
 }
   
