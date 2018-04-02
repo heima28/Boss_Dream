@@ -182,9 +182,12 @@ public class CourierAction extends CommonAction<Courier> {
         };
         Page<Courier> p = courierService.findAll(specification, null);
         List<Courier> list = p.getContent();
-
+        System.out.println(list.size());
+        for (Courier courier : list) {
+            System.out.println(courier.toString());
+        }
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
+        jsonConfig.setExcludes(new String[] {"fixedAreas"});
         list2json(list, jsonConfig);
         return NONE;
     }
@@ -197,6 +200,16 @@ public class CourierAction extends CommonAction<Courier> {
 
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
+        list2json(list, jsonConfig);
+        return NONE;
+    }
+
+    @Action(value = "courierAction_findAssociatedCouriers")
+    public String findAssociatedCouriers() throws IOException {
+        List<Courier> list =
+                courierService.findAssociatedCouriers(getModel().getId());
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"fixedAreas" , "operatingTime"});
         list2json(list, jsonConfig);
         return NONE;
     }

@@ -26,4 +26,5 @@ public interface CourierService {
 
     List<Courier> findAvaible();
 
+    List<Courier> findAssociatedCouriers(Long fixedAreaId);
 }

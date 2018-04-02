@@ -92,8 +92,6 @@ public class SubAreaAction extends CommonAction<SubArea> {
         return NONE;
     }
     
-    
-    
     /**
      * 区域数据柱状图
      */
