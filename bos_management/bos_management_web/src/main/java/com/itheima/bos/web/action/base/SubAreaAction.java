@@ -87,4 +87,5 @@ public class SubAreaAction extends CommonAction<SubArea> {
         list2json(list, jsonConfig);
         return NONE;
     }
+
 }

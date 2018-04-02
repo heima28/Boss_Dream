@@ -20,14 +20,11 @@
 		指定连接池配置
 		#########################################################
 	-->
-	<bean id="dataSource"
-		class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass"
-			value="oracle.jdbc.driver.OracleDriver" />
-		<property name="jdbcUrl"
-			value="jdbc:oracle:thin:@localhost:1521:ORCL" />
-		<property name="user" value="heima28" />
-		<property name="password" value="heima28" />
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@10.211.55.9:1521:ORCL"/>
+		<property name="user" value="BOS_BOS_ROOT"/>
+		<property name="password" value="ganlin"/>
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"
@@ -186,43 +183,43 @@
 	
 
 	<!-- 注册任务详情,通过反射的方式调用目标类的目标方法 -->
-	<bean id="jobDetail"
+	<!--<bean id="jobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<!-- 注入目标对象 -->
+		&lt;!&ndash; 注入目标对象 &ndash;&gt;
 		<property name="targetObject" ref="workbillJob"></property>
-		<!-- 注入目标方法 -->
+		&lt;!&ndash; 注入目标方法 &ndash;&gt;
 		<property name="targetMethod" value="sendMail"></property>
 	</bean>
-	<!-- 注册触发器,可以理解为这是一个闹钟 -->
+	&lt;!&ndash; 注册触发器,可以理解为这是一个闹钟 &ndash;&gt;
 	<bean id="emailTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<!-- 指定触发的规则.闹钟在什么时候响起 -->
+		&lt;!&ndash; 指定触发的规则.闹钟在什么时候响起 &ndash;&gt;
 		<property name="cronExpression">
-			<!-- 每隔五秒钟执行一次 -->
+			&lt;!&ndash; 每隔五秒钟执行一次 &ndash;&gt;
 			<value>0/5 * * * * ? 2099</value>
 		</property>
-		<!-- 注入任务详情,闹钟响起的时候要做什么事情 -->
+		&lt;!&ndash; 注入任务详情,闹钟响起的时候要做什么事情 &ndash;&gt;
 		<property name="jobDetail" ref="jobDetail"></property>
 	</bean>
-	<!--
+	&lt;!&ndash;
 		spring提供的一个工厂类
 		任务工厂类
 		可以简单理解为这是一台手机
-	-->
+	&ndash;&gt;
 	<bean
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<!--
+		&lt;!&ndash;
 			注入触发器
 			可以简单理解为闹钟的集合
-		-->
+		&ndash;&gt;
 		<property name="triggers">
-			<!-- 指定具体的触发器,可以简单理解为具体的一个闹钟 -->
+			&lt;!&ndash; 指定具体的触发器,可以简单理解为具体的一个闹钟 &ndash;&gt;
 			<list>
 				<ref bean="emailTrigger" />
 			</list>
 
 		</property>
-	</bean>
+	</bean>-->
 
 
 

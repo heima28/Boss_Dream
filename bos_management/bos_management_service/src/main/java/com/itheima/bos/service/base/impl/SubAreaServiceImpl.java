@@ -53,4 +53,5 @@ public class SubAreaServiceImpl implements SubAreaService {
         fixedArea.setId(fixedAreaId);
         return subAreaRepository.findByFixedArea(fixedArea);
     }
+
 }
