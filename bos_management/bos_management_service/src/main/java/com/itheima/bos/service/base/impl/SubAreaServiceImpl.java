@@ -56,8 +56,6 @@ public class SubAreaServiceImpl implements SubAreaService {
         return subAreaRepository.findByFixedArea(fixedArea);
     }
 
-<<<<<<< .merge_file_R2grMH
-=======
     @Override
     public List<LinkedHashMap<String, Object>> exportfigure() {
         List<Object[]> list = subAreaRepository.exportfigure();
@@ -76,5 +74,4 @@ public class SubAreaServiceImpl implements SubAreaService {
         }
         return list2;
     }
->>>>>>> .merge_file_5TFBM5
 }

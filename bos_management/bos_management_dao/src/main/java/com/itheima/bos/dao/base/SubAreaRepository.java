@@ -24,6 +24,6 @@ public interface SubAreaRepository extends JpaRepository<SubArea, Long> {
     // 传入的参数必须指定id属性
     List<SubArea> findByFixedArea(FixedArea fixedArea);
 
-    @Query("select a.province,count(*) from Area a group by a.province")
+    @Query("select a.province,count(*) from SubArea s inner join s.area a group by a.province")
     List<Object[]> exportfigure();
 }
