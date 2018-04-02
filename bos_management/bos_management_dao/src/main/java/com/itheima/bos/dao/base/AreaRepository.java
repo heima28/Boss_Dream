@@ -1,6 +1,7 @@
 package com.itheima.bos.dao.base;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,5 +24,9 @@ public interface AreaRepository extends JpaRepository<Area, Long> {
     // SELECT a.C_PROVINCE,COUNT(*) FROM T_AREA a GROUP BY a.C_PROVINCE;
     @Query("select a.province,count(*) from Area a group by a.province")
     List<Object[]> exportCharts();
+    
+    @Query("select a.province,count(*) from Area a group by a.province")
+    List<Object[]> exportfigure();
+    
 
 }

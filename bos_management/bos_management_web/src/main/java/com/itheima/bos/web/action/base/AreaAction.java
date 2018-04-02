@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 /**
@@ -250,6 +252,20 @@ public class AreaAction extends CommonAction<Area> {
     public String exportCharts() throws IOException {
         List<Object[]> list = areaService.exportCharts();
         list2json(list, null);
+        return NONE;
+    }
+
+    /**
+     * 区域数据柱状图
+     */
+    @Action(value = "areaAction_exportfigure")
+    public String exportfigure() throws IOException {
+        List<LinkedHashMap<String, Object>> list = areaService.exportfigure();
+        String json = com.alibaba.fastjson.JSONObject.toJSONString(list);
+        System.out.println(json);
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(json);
         return NONE;
     }
 
