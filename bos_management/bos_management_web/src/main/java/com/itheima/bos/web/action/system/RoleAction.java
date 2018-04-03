@@ -84,7 +84,9 @@ public class RoleAction extends CommonAction<Role> {
     @Action(value = "roleAction_edit", results = {@Result(name = "success",
             location = "/pages/system/role.html", type = "redirect")})
     public String edit() {
+        System.out.println("====================================");
         System.out.println("menuIds=="+menuIds+"===permissionIds"+permissionIds+"id=="+getModel().getId());
+        System.out.println("====================================");
         roleService.edit(getModel(), menuIds, permissionIds);
         return SUCCESS;
     }
@@ -126,7 +128,7 @@ public class RoleAction extends CommonAction<Role> {
         List<Menu> list =roleService.findByRoleId4Ztree(id);
         
         JsonConfig jsonConfig=new JsonConfig();
-        jsonConfig.setExcludes(new String[]{"roles","childrenMenus","parentMenu"});
+        jsonConfig.setExcludes(new String[]{"roles","childrenMenus","parentMenu","pId","children"});
         list2json(list, jsonConfig);
         return NONE;
     }

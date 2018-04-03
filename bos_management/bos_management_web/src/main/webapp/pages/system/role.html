@@ -137,6 +137,7 @@
 					},
 					check : {
 						enable : true,
+						//nocheckInherit: true
 					}
 				};
 
@@ -188,12 +189,11 @@
 			<table id="grid"></table>
 		</div>
 
-
-		//窗口
 		<div class="easyui-window" title="对收派标准进行添加或者修改" id="roleWindow"
 		collapsible="false" minimizable="false" maximizable="false"
-		modal="true" closed="true"
-		style="width: 600px; top: 50px; left: 200px">
+		modal="true" resizable="true" closed="true"
+		data-options="fit:true"
+		>
 		<div region="north" style="height: 31px; overflow: hidden;"
 			split="false" border="false">
 

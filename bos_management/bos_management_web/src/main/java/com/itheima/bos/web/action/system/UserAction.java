@@ -1,6 +1,15 @@
 package com.itheima.bos.web.action.system;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -21,7 +30,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
-import com.itheima.bos.domain.system.Menu;
 import com.itheima.bos.domain.system.User;
 import com.itheima.bos.service.system.UserService;
 import com.itheima.bos.web.action.CommonAction;
@@ -45,24 +53,30 @@ public class UserAction extends CommonAction<User> {
 
     // 用户输入的验证码
     private String checkcode;
+    private String remember;
+    private String auto;
 
     public void setCheckcode(String checkcode) {
         this.checkcode = checkcode;
     }
 
+    public void setRemember(String remember) {
+        this.remember = remember;
+    }
+
+    public void setAuto(String auto) {
+        this.auto = auto;
+    }
+
     @Action(value = "userAction_login",
-            results = {
-                    @Result(name = "success", location = "/index.html",
-                            type = "redirect"),
-                    @Result(name = "login", location = "/login.html",
-                            type = "redirect")})
+            results = {@Result(name = "success", location = "/index.html", type = "redirect"),
+                    @Result(name = "login", location = "/login.html", type = "redirect")})
     public String login() {
 
-        String serverCode = (String) ServletActionContext.getRequest()
-                .getSession().getAttribute("key");
+        String serverCode =
+                (String) ServletActionContext.getRequest().getSession().getAttribute("key");
 
-        if (StringUtils.isNotEmpty(serverCode)
-                && StringUtils.isNotEmpty(checkcode)
+        if (StringUtils.isNotEmpty(serverCode) && StringUtils.isNotEmpty(checkcode)
                 && serverCode.equals(checkcode)) {
 
             // 主体,代表当前用户
@@ -70,18 +84,39 @@ public class UserAction extends CommonAction<User> {
             // 使用代码校验权限
             // subject.checkPermission("");
 
-            AuthenticationToken token = new UsernamePasswordToken(
-                    getModel().getUsername(), getModel().getPassword());
+            AuthenticationToken token =
+                    new UsernamePasswordToken(getModel().getUsername(), getModel().getPassword());
             try {
                 // 执行登录
                 subject.login(token);
 
                 // 方法的返回值由Realm中doGetAuthenticationInfo方法定义SimpleAuthenticationInfo对象的时候,第一个参数决定的
                 User user = (User) subject.getPrincipal();
-                ServletActionContext.getRequest().getSession()
-                        .setAttribute("user", user);
+                if (user != null) {
+                    Cookie cookie = new Cookie("username", user.getUsername());
+                    cookie.setMaxAge(7 * 24 * 60 * 60);
 
-                return SUCCESS;
+                    String username = user.getUsername();
+                    username = URLEncoder.encode(username, "UTF8");
+                    System.out.println(username);
+                    Cookie cookie2 = new Cookie("auto_login", username + "#" + user.getPassword());
+                    cookie2.setMaxAge(7 * 24 * 60 * 60);
+
+                    if (!"on".equals(remember)) {
+                        cookie.setMaxAge(0);
+                    }
+                    if (!"on".equals(auto)) {
+                        cookie2.setMaxAge(0);
+                    }
+                    HttpServletResponse response = ServletActionContext.getResponse();
+                    response.addCookie(cookie);
+                    response.addCookie(cookie2);
+
+                    HttpSession session = ServletActionContext.getRequest().getSession();
+                    session.setAttribute("user", user);
+                    
+                    return SUCCESS;
+                }
             } catch (UnknownAccountException e) {
                 // 用户名写错了
                 e.printStackTrace();
@@ -100,8 +135,8 @@ public class UserAction extends CommonAction<User> {
         return LOGIN;
     }
 
-    @Action(value = "userAction_logout", results = {@Result(name = "success",
-            location = "/login.html", type = "redirect")})
+    @Action(value = "userAction_logout",
+            results = {@Result(name = "success", location = "/login.html", type = "redirect")})
     public String logout() {
 
         Subject subject = SecurityUtils.getSubject();
@@ -121,8 +156,8 @@ public class UserAction extends CommonAction<User> {
     @Autowired
     private UserService userService;
 
-    @Action(value = "userAction_save", results = {@Result(name = "success",
-            location = "/pages/system/userlist.html", type = "redirect")})
+    @Action(value = "userAction_save", results = {
+            @Result(name = "success", location = "/pages/system/userlist.html", type = "redirect")})
     public String save() {
         userService.save(getModel(), roleIds);
         return SUCCESS;
@@ -141,4 +176,21 @@ public class UserAction extends CommonAction<User> {
         return NONE;
     }
 
+    @Action("userAction_autoLogin")
+    public String autoLogin() throws Exception {
+        
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String validateCode = (String) request.getSession().getAttribute("key");
+        String username = getModel().getUsername();
+
+        username = URLDecoder.decode(username, "UTF-8");
+
+        List<String> list = new ArrayList<>();
+        list.add(validateCode);
+        list.add(username);
+
+        list2json(list, null);
+
+        return NONE;
+    }
 }

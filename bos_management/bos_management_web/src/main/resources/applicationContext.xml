@@ -157,10 +157,18 @@
 				/** = authc
 			-->
 			<value>
-
-
-
-				/** = anon
+				<!-- /css/* = anon
+				/data/* = anon
+				/images/* = anon
+				/js/** = anon
+				/validatecode.jsp = anon
+				/userAction_login.action = anon
+				/courierAction_pageQuery.action = perms["courierAction_pageQuery"]
+				/hi.html = perms["courierAction_pageQuery"]
+				/userAction_autoLogin.action = anon
+				/webService/** = anon
+				/upload/** = anon
+				/** = authc -->
 			</value>
 		</property>
 	</bean>

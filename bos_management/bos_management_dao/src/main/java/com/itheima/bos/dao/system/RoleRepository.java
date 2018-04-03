@@ -25,7 +25,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query("select r.permissions from Role r where r.id=?")
     List<Permission> findByRoleId(Long id);
 
-    @Query("select r.menus from Role r where r.id=?")
+    @Query("select m from Role r inner join r.menus m where r.id=? and m.parentMenu!=null")
     List<Menu> findByRoleId4Ztree(Long id);
 
 }
