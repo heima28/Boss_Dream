@@ -72,6 +72,7 @@ public class CustomerAction extends ActionSupport
                 MapMessage message = session.createMapMessage();
                 message.setString("tel", model.getTelephone());
                 message.setString("code", code);
+                System.out.println("=============发送验证码===========================");
                 return message;
             }
         });
