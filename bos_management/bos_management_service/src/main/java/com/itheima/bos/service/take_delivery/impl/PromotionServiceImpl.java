@@ -50,4 +50,9 @@ public class PromotionServiceImpl implements PromotionService {
         return pageBean;
     }
 
+    @Override
+	public Promotion displayData(Long id) {
+		return promotionRepository.findOne(id);
+	}
+
 }

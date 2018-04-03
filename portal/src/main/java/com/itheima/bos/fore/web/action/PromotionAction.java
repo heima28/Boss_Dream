@@ -1,6 +1,7 @@
 package com.itheima.bos.fore.web.action;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
@@ -60,4 +61,43 @@ public class PromotionAction extends ActionSupport {
 
         return NONE;
     }
+    
+    private Long id;
+    
+    
+    
+ // promotionAction_displayData
+ 	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Action(value = "promotionAction_displayData")
+ 	public String displayData() throws IOException {
+
+ 		Promotion promotion = WebClient
+ 				.create("http://localhost:8080/bos_management_web/webService/promotionService/displayData")
+ 				.type(MediaType.APPLICATION_JSON)
+ 				.accept(MediaType.APPLICATION_JSON).query("id",id)
+ 				.get(Promotion.class);
+ 		
+ 		HttpServletResponse response = ServletActionContext.getResponse();
+ 		response.setContentType("text/html;charset=UTF-8");
+
+ 		PrintWriter writer = response.getWriter();
+ 		writer.write(promotion.getDescription());
+ 		
+ 		
+ 		return NONE;
+ 	}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

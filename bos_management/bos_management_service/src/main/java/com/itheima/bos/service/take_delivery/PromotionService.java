@@ -32,4 +32,15 @@ public interface PromotionService {
     PageBean<Promotion> findAll4Fore(@QueryParam("pageIndex") int page,
             @QueryParam("pageSize") int pageSize);
 
+    
+    
+	@GET
+	@Path("/displayData")
+	Promotion displayData(@QueryParam("id")Long id);
+    
+    
+    
+    
+    
+    
 }
