@@ -7,7 +7,6 @@
 	<packaging>pom</packaging>
 	<description>统一管理依赖</description>
 
-
 	<properties>
 		<spring.version>4.2.4.RELEASE</spring.version>
 		<struts2.version>2.3.24</struts2.version>

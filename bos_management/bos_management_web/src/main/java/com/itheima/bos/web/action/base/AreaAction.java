@@ -21,6 +21,11 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -80,10 +85,12 @@ public class AreaAction extends CommonAction<Area> {
     public String importXLS() {
 
         try {
-            HSSFWorkbook hssfWorkbook =
-                    new HSSFWorkbook(new FileInputStream(file));
+          /*  HSSFWorkbook hssfWorkbook = new HSSFWorkbook(new FileInputStream(file));
             // 读取第一个工作簿
-            HSSFSheet sheet = hssfWorkbook.getSheetAt(0);
+            HSSFSheet sheet = workbook.getSheetAt(0);*/
+        	Workbook workbook = WorkbookFactory.create(new FileInputStream(file));  
+        	Sheet sheet = workbook.getSheetAt(0);
+        	System.out.println("area:WorkbookFactory:getSheetAt(0)");
             // 储存对象的集合
             List<Area> list = new ArrayList<>();
             for (Row row : sheet) {
@@ -123,7 +130,7 @@ public class AreaAction extends CommonAction<Area> {
             areaService.save(list);
 
             // 释放资源
-            hssfWorkbook.close();
+            workbook.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
