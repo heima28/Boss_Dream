@@ -83,7 +83,15 @@
 			}, {
 				field : 'status',
 				title : '状态',
-				width : 100
+				width : 100,
+				formatter : function(value, row, index) {
+					var str = "活动正在火热进行中"
+					if (value == '1') {
+						return str;
+					} else {
+						return "活动已经结束";
+					}
+				}
 			} ] ],
 			url : '../../promotionAction_pageQuery.action',
 			pageList : [ 30, 50, 100 ],

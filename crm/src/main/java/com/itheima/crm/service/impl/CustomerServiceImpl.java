@@ -55,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         // 要关联的数据和定区Id进行绑定
-        if (customerIds != null && fixedAreaId.length() > 0) {
+        if (customerIds != null && fixedAreaId.length() > 0 && customerIds[0] != 0l) {
             for (Long customerId : customerIds) {
                 customerRepository.bindCustomer2FixedArea(customerId,
                         fixedAreaId);

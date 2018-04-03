@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.itheima</groupId>
@@ -51,6 +50,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fsatjson</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.1.39</version>
 		</dependency>
 
 		<dependency>
@@ -154,6 +159,14 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>10.2.0.2.0</version>
+		</dependency>
+
+		<!-- 数据库驱动 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- Excel解析工具类 -->
@@ -297,9 +310,9 @@
 			<version>2.1.7</version>
 		</dependency>
 		<dependency>
-			<groupId>com.itheima</groupId>
-			<artifactId>itextAsain</artifactId>
-			<version>1.0.0</version>
+			<groupId>com.baidu</groupId>
+			<artifactId>iTextAsain</artifactId>
+			<version>10.2.0.2.0</version>
 		</dependency>
 
 		<!-- groovy -->

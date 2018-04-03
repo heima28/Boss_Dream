@@ -4,3 +4,4 @@
 target
 .tern-project
 mylog.log
+applicationContext.xml

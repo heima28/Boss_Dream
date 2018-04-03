@@ -2,6 +2,7 @@ package com.itheima.bos.service.base.impl;
 
 import java.util.List;
 
+import com.itheima.bos.domain.base.FixedArea;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +70,13 @@ public class CourierServiceImpl implements CourierService {
     public List<Courier> findAvaible() {
 
         return courierRepository.findByDeltagIsNull();
+    }
+
+    @Override
+    public List<Courier> findAssociatedCouriers(Long fixedAreaId) {
+        FixedArea fixedArea = new FixedArea();
+
+        fixedArea.setId(fixedAreaId);
+        return courierRepository.findByFixedAreas(fixedArea);
     }
 }

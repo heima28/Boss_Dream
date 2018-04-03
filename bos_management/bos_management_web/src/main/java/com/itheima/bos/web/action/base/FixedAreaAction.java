@@ -63,7 +63,7 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
         Page<FixedArea> page = fixedAreaService.findAll(pageable);
 
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"subareas", "couriers"});
+        jsonConfig.setExcludes(new String[] {"subareas", "couriers" });
 
         page2json(page, jsonConfig);
         return NONE;
@@ -111,6 +111,9 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
                     location = "/pages/base/fixed_area.html",
                     type = "redirect")})
     public String assignCustomers2FixedArea() throws IOException {
+        if (customerIds == null || customerIds.length == 0) {
+            customerIds = new Long[]{0l};
+        }
         WebClient.create(
                 "http://localhost:8180/crm/webService/customerService/assignCustomers2FixedArea")
                 .query("fixedAreaId", getModel().getId())
@@ -138,9 +141,10 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
                     location = "/pages/base/fixed_area.html",
                     type = "redirect")})
     public String associationCourierToFixedArea() throws IOException {
-
-        fixedAreaService.associationCourierToFixedArea(getModel().getId(),
-                courierId, takeTimeId);
+        if(courierId != null){
+            fixedAreaService.associationCourierToFixedArea(getModel().getId(),
+                    courierId, takeTimeId);
+        }
         return SUCCESS;
     }
 
@@ -157,9 +161,10 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
                     location = "/pages/base/fixed_area.html",
                     type = "redirect")})
     public String assignSubAreas2FixedArea() throws IOException {
-        fixedAreaService.assignSubAreas2FixedArea(getModel().getId(),
-                subAreaIds);
-
+        if(subAreaIds != null && subAreaIds.length > 0){
+            fixedAreaService.assignSubAreas2FixedArea(getModel().getId(),
+                    subAreaIds);
+        }
         return SUCCESS;
     }
 }

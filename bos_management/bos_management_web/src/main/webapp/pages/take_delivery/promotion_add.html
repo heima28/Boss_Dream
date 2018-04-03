@@ -39,9 +39,17 @@
 	// 提交表单
 	function saveData() {
 		if ($("#promotionForm").form("validate")) {
-			// 把写在kindeditor中的内容同步到textarea节点中
-			window.editor.sync();
-			$("#promotionForm").submit();
+			
+			var start = $("#startDate").val();
+			var end = $("#endDate").val();
+			
+			if (start < end) {
+				// 把写在kindeditor中的内容同步到textarea节点中
+				window.editor.sync();
+				$("#promotionForm").submit();
+			} else {
+				$.messager.alert('提示', '活动发布时间不能大于失效时间', 'info');
+			}
 		}
 	}
 </script>

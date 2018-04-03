@@ -18,6 +18,8 @@
 		<link rel="stylesheet" href="../../js/ztree/zTreeStyle.css" type="text/css" />
 		<script src="../../js/ztree/jquery.ztree.all-3.5.js" type="text/javascript"></script>
 		<script type="text/javascript">
+			var roleID;
+		
 			$(function(){
 				// 数据表格属性
 				$("#grid").datagrid({
@@ -29,8 +31,69 @@
 							handler : function(){
 								location.href='role_add.html';
 							}
-						}           
+						}, {
+							id : 'edit',
+							text : '修改角色',
+							iconCls : 'icon-edit',
+							handler :function(){
+								//清空权限
+								$("#permissonTd").html("");
+								var permissions=new Array();
+								// 判断用户勾选的数据的条数
+								var result = $("#grid").datagrid("getSelections")
+								if (result.length == 1) {
+									// 勾选一条数据的时候,才可以进行修改
+									// 打开窗口
+									$("#roleWindow").window("open")
+									//回填数据到form表单
+									$("#roleForm").form("load", result[0])
+									roleID=result[0].id
+									//给隐藏域赋值
+									$("#id").val(roleID)
+									//根据用户id获取菜单IDS
+									$.get("../../roleAction_findByRoleId4Ztree.action?id="+roleID,function(data){
+										for (var i = 0; i < data.length; i++) {
+											var treeObj = $.fn.zTree.getZTreeObj("menuTree");
+											var node = treeObj.getNodeByParam("id", data[i].id,null);
+											if(node!=null){
+												treeObj.checkNode(node, true, true);
+												}
+										}
+									})
+									
+									
+									//根据用户ID查找出该用户拥有的权限选项
+									$.get("../../roleAction_findByRoleId.action?id="+roleID,function(data){
+										for(var i=0;i<data.length;i++){
+											var id = data[i].id;
+											permissions.push(id);
+										}
+										
+										$.post("../../permissionAction_findAll.action",
+						function(data) {
+							for (var i = 0; i < data.length; i++) {
+								var id = data[i].id;
+								var name = data[i].name;
+								//判断角色是否拥有权限
+								$("#permissonTd").append('<input id="'+id+'"  type="checkbox" name="permissionIds" value="'+id+'" /><label for="'+id+'">'+ name + '</label>')
+							}
+							
+							//给原本角色选中
+							for (var k = 0; k < permissions.length; k++) {
+								$("#"+permissions[k]).attr("checked","checked")
+
+							}
+							
+						})
+									})
+								} else {
+									$.messager.alert("提示", "您必须也只能选择一条数据进行修改", "info")
+								}
+								
+							}
+						}
 					],
+					
 					url : '../../roleAction_pageQuery.action',
 					pageList : [ 30, 50, 100 ],
 					pagination : true,
@@ -39,6 +102,7 @@
 						{
 							field : 'id',
 							title : '编号',
+							checkbox : true,
 							width : 200
 						},
 						{
@@ -59,13 +123,139 @@
 					]]
 				});
 			});
-		</script>
+		
+			$(function() {
+				// 授权树初始化
+				var setting = {
+					data : {
+						key : {
+							title : "t"
+						},
+						simpleData : {
+							enable : true
+						}
+					},
+					check : {
+						enable : true,
+					}
+				};
+
+				$.ajax({
+					url : '../../menuAction_findLevelOne.action',
+					type : 'POST',
+					dataType : 'text',
+					success : function(data) {
+						var zNodes = eval("(" + data + ")");
+						$.fn.zTree.init($("#menuTree"), setting, zNodes);
+					},
+					error : function(msg) {
+						alert('树加载异常!');
+					}
+				});
+		// 点击保存
+		$('#save').click(function() {
+			if ($("#roleForm").form("validate")) {
+				
+				//获取ztree
+				var treeObj = $.fn.zTree.getZTreeObj("menuTree");
+				// true : 获取选中的节点
+				// false : 获取未选中的节点
+				var nodes = treeObj.getCheckedNodes(true);
+				// 遍历选中的节点
+				var arr = new Array();
+				for (var i = 0; i < nodes.length; i++) {
+					var id = nodes[i].id;
+					arr.push(id);
+				}
+				// 获取选中的菜单的ID
+				var ids = arr.toString();
+				//使用隐藏域把菜单的ID传递给后台
+				$("#menuIds").val(ids);
+				// 提交表单
+				$("#roleForm").submit();
+			}
+		});
+	});
+	
+	
+//权限选项
+
+</script>
 	</head>
 
 	<body class="easyui-layout">
 		<div data-options="region:'center'">
 			<table id="grid"></table>
 		</div>
-	</body>
+
+
+		//窗口
+		<div class="easyui-window" title="对收派标准进行添加或者修改" id="roleWindow"
+		collapsible="false" minimizable="false" maximizable="false"
+		modal="true" closed="true"
+		style="width: 600px; top: 50px; left: 200px">
+		<div region="north" style="height: 31px; overflow: hidden;"
+			split="false" border="false">
+
+			<div class="datagrid-toolbar">
+			<a id="save" icon="icon-save" href="#" class="easyui-linkbutton"
+				plain="true">保存</a>
+		</div>
+		</div>
+
+		<div region="center" style="overflow: auto; padding: 5px;"
+			border="false">
+<form id="roleForm" method="post"
+			action="../../roleAction_edit.action">
+
+			<input type="hidden" id="menuIds" name="menuIds" />
+			<table class="table-edit" width="80%" align="center">
+				<tr class="title">
+					<td colspan="2">角色信息</td>
+				</tr>
+				<tr>
+				<td colspan="2">
+					<input type="hidden" name="id" />
+				</td>
+				</tr>
+				<tr>
+					<td>名称</td>
+					<td>
+						<input type="text" name="name" class="easyui-validatebox"
+							data-options="required:true" />
+					</td>
+				</tr>
+				<tr>
+					<td>关键字</td>
+					<td>
+						<input type="text" name="keyword" class="easyui-validatebox"
+							data-options="required:true" />
+					</td>
+				</tr>
+				<tr>
+					<td>描述</td>
+					<td>
+						<textarea name="description" rows="4" cols="60"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>权限选择</td>
+					<td>
+						<div id="permissonTd"></div>
+					</td>
+				</tr>
+				<tr>
+					<td>菜单授权</td>
+					<td>
+						<ul id="menuTree" class="ztree"></ul>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+
+
+
 
 </html>

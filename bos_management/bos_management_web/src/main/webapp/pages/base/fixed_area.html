@@ -155,11 +155,12 @@
 		text : '关联快递员',
 		iconCls : 'icon-sum',
 		handler : function() {
-			// 判断是否已经选中了一个定区，弹出关联快递员窗口 
+			// 判断是否已经选中了一个定区，弹出关联快递员窗口
 			var rows = $("#grid").datagrid('getSelections');
 			if (rows.length == 1) {
 				// 只选择了一个定区
-				// 弹出定区关联快递员 窗口 
+				// 弹出定区关联快递员 窗口
+                // $("#courierCombobox").combobox("select" , rows[0].)
 				$("#courierWindow").window('open');
 			} else {
 				// 没有选中定区，或者选择 了多个定区
@@ -250,17 +251,17 @@
 
 	});
 
-	function doDblClickRow() {
-		alert("双击表格数据...");
+	function doDblClickRow(index , row) {
+		// alert("双击表格数据...");
 		$('#association_subarea').datagrid({
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../data/association_subarea.json",
+			url : "../../subAreaAction_findAssociatedSubAreas.action?id="+row.id,
 			columns : [ [ {
 				field : 'id',
-				title : '分拣编号',
+				title : '分区编号',
 				width : 120,
 				align : 'center'
 			}, {
@@ -297,17 +298,17 @@
 					return "";
 				}
 			}, {
-				field : 'addresskey',
+				field : 'keyWords',
 				title : '关键字',
 				width : 120,
 				align : 'center'
 			}, {
-				field : 'startnum',
+				field : 'startNum',
 				title : '起始号',
 				width : 100,
 				align : 'center'
 			}, {
-				field : 'endnum',
+				field : 'endNum',
 				title : '终止号',
 				width : 100,
 				align : 'center'
@@ -316,26 +317,27 @@
 				title : '单双号',
 				width : 100,
 				align : 'center'
-			}, {
+			}/*, {
 				field : 'position',
 				title : '位置',
 				width : 200,
 				align : 'center'
-			} ] ]
+			} */
+			] ]
 		});
 		$('#association_customer').datagrid({
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../data/association_customer.json",
+			url : "../../fixedAreaAction_findAssociatedCustomers.action?id="+row.id,
 			columns : [ [ {
 				field : 'id',
 				title : '客户编号',
 				width : 120,
 				align : 'center'
 			}, {
-				field : 'name',
+				field : 'username',
 				title : '客户名称',
 				width : 120,
 				align : 'center'
@@ -346,6 +348,84 @@
 				align : 'center'
 			} ] ]
 		});
+
+        $('#association_courier').removeChildNodes()
+
+        $('#association_courier').datagrid({
+            fit : true,
+            border : true,
+            rownumbers : true,
+            striped : true,
+            url : "../../courierAction_findAssociatedCouriers.action?id="+row.id,
+            columns : [ [ {
+                field : 'courierNum',
+                title : '快递员工号',
+                width : 120,
+                align : 'center'
+            }, {
+                field : 'name',
+                title : '快递员姓名',
+                width : 120,
+                align : 'center'
+            }, {
+                field : 'telephone',
+                title : '快递员电话',
+                width : 100,
+                align : 'center'
+            }, {
+                field : 'pda',
+                title : 'PDA号',
+                width : 100,
+                align : 'center'
+            }, {
+                field : 'checkPwd',
+                title : '查台密码',
+                width : 100,
+                align : 'center'
+            }, {
+                field : 'type',
+                title : '取件员类型',
+                width : 100,
+                align : 'center'
+            }, {
+                field : 'company',
+                title : '单位',
+                width : 100,
+                align : 'center'
+            }, {
+                field : 'vehicleType',
+                title : '车辆类型',
+                width : 100,
+                align : 'center'
+            }, {
+                field : 'vehicleNum',
+                title : '车牌号',
+                width : 100,
+                align : 'center'
+            }, {
+                field : 'standard.name',
+                title : '取派标准',
+                width : 100,
+                align : 'center',
+                formatter : function(data, row, index) {
+                    if (row.standard != null) {
+                        return row.standard.name;
+                    }
+                    return "";
+                }
+            }, {
+                field : 'takeTime.name',
+                title : '工作时间',
+                width : 100,
+                align : 'center',
+                formatter : function(data, row, index) {
+                    if (row.takeTime != null) {
+                        return row.takeTime.name;
+                    }
+                    return "";
+                }
+            }] ] ,
+        });
 
 	}
 </script>
@@ -373,6 +453,10 @@
 				style="width: 100%; height: 100%; overflow: hidden">
 				<table id="association_customer"></table>
 			</div>
+            <div title="关联快递员" id="couriers"
+                 style="width: 100%; height: 100%; overflow: hidden">
+                <table id="association_courier"></table>
+            </div>
 		</div>
 	</div>
 
@@ -595,7 +679,7 @@
 						<td>选择快递员</td>
 						<td>
 							<!-- 存放定区编号 --> <input type="hidden" name="id"
-							id="courierFixedAreaId" /> <input
+							id="courierFixedAreaId" /> <input id="courierCombobox"
 							data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
 							type="text" name="courierId" class="easyui-combobox"
 							required="true" />
@@ -603,7 +687,7 @@
 					</tr>
 					<tr>
 						<td>选择收派时间</td>
-						<td><input
+						<td><input id="takeTimeCombobox"
 							data-options="ditable:false, url:'../../takeTimeAction_listajax.action',valueField:'id',textField:'name'"
 							type="text" name="takeTimeId" class="easyui-combobox"
 							required="true" /></td>

@@ -20,14 +20,12 @@
 		指定连接池配置
 		#########################################################
 	-->
-	<bean id="dataSource"
-		class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass"
-			value="oracle.jdbc.driver.OracleDriver" />
-		<property name="jdbcUrl"
-			value="jdbc:oracle:thin:@192.168.122.100:1521:ORCL" />
-		<property name="user" value="heima28" />
-		<property name="password" value="r123" />
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.88.100:1521:ORCL"/>
+		<property name="user" value="boss"/>
+		<property name="password" value="123"/>
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"
@@ -182,9 +180,6 @@
 		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
 	</bean>
 
-
-	
-
 	<!-- 注册任务详情,通过反射的方式调用目标类的目标方法 -->
 	<bean id="jobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -219,12 +214,33 @@
 			<!-- 指定具体的触发器,可以简单理解为具体的一个闹钟 -->
 			<list>
 				<ref bean="emailTrigger" />
+				<ref bean="promotionTrigger" />
 			</list>
 
 		</property>
 	</bean>
 
-
+	<!-- 注册触发器,可以理解为这是一个闹钟 -->
+	<bean id="promotionTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<!-- 指定触发的规则.闹钟在什么时候响起 -->
+		<property name="cronExpression">
+			<!-- 每隔五秒钟执行一次 -->
+			<!-- cron表达式：[秒	分	时	日	月	星期	年（可省略）] -->
+			<value>0 0 0 * * ?</value>
+		</property>
+		<!-- 注入任务详情,闹钟响起的时候要做什么事情 -->
+		<property name="jobDetail" ref="jobDetail_2"></property>
+	</bean>
+		
+	<!-- 注册任务详情,通过反射的方式调用目标类的目标方法 -->
+	<bean id="jobDetail_2"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 注入目标对象 -->
+		<property name="targetObject" ref="promotionJob"></property>
+		<!-- 注入目标方法 -->
+		<property name="targetMethod" value="checkPromotionState"></property>
+	</bean>
 
 	<!--发布促销任务的WebService -->
 	<jaxrs:server address="/promotionService">

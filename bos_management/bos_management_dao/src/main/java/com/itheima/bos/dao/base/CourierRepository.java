@@ -2,6 +2,7 @@ package com.itheima.bos.dao.base;
 
 import java.util.List;
 
+import com.itheima.bos.domain.base.FixedArea;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,4 +26,6 @@ public interface CourierRepository extends JpaRepository<Courier, Long>,
     void updateDelTagById(Long id);
 
     List<Courier> findByDeltagIsNull();
+
+    List<Courier> findByFixedAreas(FixedArea fixedArea);
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.itheima.bos.domain.system.Menu;
+import com.itheima.bos.domain.system.Permission;
 import com.itheima.bos.domain.system.Role;
 
 /**
@@ -19,5 +21,11 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     // 要解决这个错误,我们需要具体指定查询结果,就是增加select r
     @Query("select r from Role r inner join r.users u where u.id = ?")
     List<Role> findbyUid(Long uid);
+    
+    @Query("select r.permissions from Role r where r.id=?")
+    List<Permission> findByRoleId(Long id);
+
+    @Query("select r.menus from Role r where r.id=?")
+    List<Menu> findByRoleId4Ztree(Long id);
 
 }

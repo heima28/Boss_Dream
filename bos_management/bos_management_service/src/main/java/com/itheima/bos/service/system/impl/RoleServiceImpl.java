@@ -1,5 +1,9 @@
 package com.itheima.bos.service.system.impl;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void save(Role role, String menuIds, Long[] permissionIds) {
         roleRepository.save(role);
-
+        
         if (StringUtils.isNotEmpty(menuIds)) {
             String[] split = menuIds.split(",");
             for (String menuId : split) {
@@ -78,6 +82,53 @@ public class RoleServiceImpl implements RoleService {
 
             }
         }
+    }
+
+    //根据角色ID获取权限IDS
+    @Override
+    public List<Permission> findByRoleId(Long id) {
+       
+        return roleRepository.findByRoleId(id);
+    }
+
+    @Override
+    public List<Menu> findByRoleId4Ztree(Long id) {
+        return roleRepository.findByRoleId4Ztree(id);
+    }
+
+    //修改角色
+    @Override
+    public void edit(Role model, String menuIds, Long[] permissionIds) {
+            Long id = model.getId();
+            if(id!=null){
+                Role role = roleRepository.findOne(id);
+                role.setMenus(null);
+                role.setPermissions(null);
+                if (StringUtils.isNotEmpty(menuIds)) {
+                    String[] split = menuIds.split(",");
+                    Set<Menu> menus=new HashSet<Menu>();
+                    for (String menuId : split) {
+                        Menu menu = new Menu();
+                        menu.setId(Long.parseLong(menuId));
+                        menus.add(menu);
+                    }
+                    role.setMenus(menus);
+                }
+
+                if (permissionIds != null && permissionIds.length > 0) {
+                    Set<Permission> permissions=new HashSet<Permission>();
+                    for (Long permissionId : permissionIds) {
+                        Permission permission = new Permission();
+                        permission.setId(permissionId);
+                        //role.getPermissions().add(permission);
+                        permissions.add(permission);
+                    }
+                    role.setPermissions(permissions);
+                }
+            }
+        
+       
+
     }
 
 }

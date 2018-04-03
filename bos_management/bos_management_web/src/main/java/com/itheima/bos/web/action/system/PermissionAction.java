@@ -75,4 +75,10 @@ public class PermissionAction extends CommonAction<Permission> {
         list2json(list, jsonConfig);
         return NONE;
     }
+    
+    private Long roleID;
+    public void setRoleID(Long roleID) {
+        this.roleID = roleID;
+    }
+    
 }
