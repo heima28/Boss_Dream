@@ -24,11 +24,23 @@
 <script type="text/javascript" src="../../js/highcharts/highcharts.js"></script>
 <script type="text/javascript">
 	function doAdd() {
+		$("#addWindow").form('clear')
 		$('#addWindow').window("open");
 	}
 
 	function doEdit() {
-		alert("修改...");
+		var rows = $('#grid').datagrid("getSelections")
+		if(rows.length == 1){
+			console.log(rows);
+			//弹框
+			 $("#addWindow").window("open")
+			//回显数据
+			$("#addWindow").form("load",rows[0]) 
+			$('#sub_area_search').combobox('select', rows[0].area.name);
+			//$("#singleId").prop("selected" , rows[0].single)
+		}else{
+			$.messager.alert('消息', '请选择一行数据进行修改', 'info')
+		}
 	}
 
 	function doDelete() {
@@ -305,7 +317,7 @@
 					</tr>
 					<tr>
 						<td>选择区域</td>
-						<td><input class="easyui-combobox" name="area.id"
+						<td><input id="sub_area_search" class="easyui-combobox" name="area.id"
 							data-options="valueField:'id',textField:'name',mode:'remote',
 									 url:'../../areaAction_findAll.action'" />
 						</td>
