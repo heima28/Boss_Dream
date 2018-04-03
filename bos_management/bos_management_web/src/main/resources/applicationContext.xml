@@ -25,9 +25,9 @@
 		<property name="driverClass"
 			value="oracle.jdbc.driver.OracleDriver" />
 		<property name="jdbcUrl"
-			value="jdbc:oracle:thin:@localhost:1521:ORCL" />
+			value="jdbc:oracle:thin:@192.168.122.100:1521:ORCL" />
 		<property name="user" value="heima28" />
-		<property name="password" value="heima28" />
+		<property name="password" value="r123" />
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"
@@ -204,17 +204,17 @@
 		<!-- 注入任务详情,闹钟响起的时候要做什么事情 -->
 		<property name="jobDetail" ref="jobDetail"></property>
 	</bean>
-	<!--
-		spring提供的一个工厂类
+	
+		<!-- spring提供的一个工厂类
 		任务工厂类
-		可以简单理解为这是一台手机
-	-->
+		可以简单理解为这是一台手机 -->
+	
 	<bean
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<!--
-			注入触发器
-			可以简单理解为闹钟的集合
-		-->
+		
+			<!-- 注入触发器
+			可以简单理解为闹钟的集合 -->
+		
 		<property name="triggers">
 			<!-- 指定具体的触发器,可以简单理解为具体的一个闹钟 -->
 			<list>
@@ -238,12 +238,5 @@
 			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"></bean>
 		</jaxrs:outInterceptors>
 	</jaxrs:server>
-
-
-
-
-
-
-
 
 </beans>
