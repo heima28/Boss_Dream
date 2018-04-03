@@ -102,6 +102,9 @@ public class RoleServiceImpl implements RoleService {
             Long id = model.getId();
             if(id!=null){
                 Role role = roleRepository.findOne(id);
+                role.setName(model.getName());
+                role.setDescription(model.getDescription());
+                role.setKeyword(model.getKeyword());
                /* role.getMenus().clear();
                 role.getPermissions().clear();*/
                 role.setMenus(null);
