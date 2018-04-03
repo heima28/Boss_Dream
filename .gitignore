@@ -4,4 +4,4 @@
 target
 .tern-project
 mylog.log
-/bos_management/bos_management_web/src/main/resources/applicationContext.xml
+applicationContext.xml
