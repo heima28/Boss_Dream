@@ -108,7 +108,6 @@ public class WaybillAction extends CommonAction<WayBill> {
 		    //处理收件人号码格式
 		    row.getCell(7).setCellType(Cell.CELL_TYPE_STRING);
 		    String recMobile = row.getCell(7).getStringCellValue();
-		    System.out.println("收件人号码:"+recMobile);
 		    String recCompany = row.getCell(8).getStringCellValue();
 		    String recAddress = row.getCell(9).getStringCellValue();
 		    WayBill wayBill = new WayBill();
@@ -127,7 +126,7 @@ public class WaybillAction extends CommonAction<WayBill> {
     	
     	wayBillService.save(list);
     	workbook.close();
-    	System.out.println("保存运单成功");
+    	System.out.println("保存运单成功!");
     	
     	 HttpServletResponse response = ServletActionContext.getResponse();
          response.setContentType("application/json;charset=UTF-8");
