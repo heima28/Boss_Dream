@@ -83,9 +83,10 @@
 		});
 	}
 
-	//导出按钮绑定的事件
-	function doExport() {
-
+	//导出excel按钮绑定的事件
+	function doExportExcel(){
+		//发送一个请求,查询数据,拼装文件
+		window.location.href="../../subAreaAction_exportExcel.action";
 	}
 
 	function doImport() {
@@ -120,9 +121,9 @@
 		handler : doImport
 	}, {
 		id : 'button-export',
-		text : '导出',
+		text : '导出excel',
 		iconCls : 'icon-undo',
-		handler : doExport
+		handler : doExportExcel
 	},{
 		id : 'button-export',
 		text : '导出柱形图',
