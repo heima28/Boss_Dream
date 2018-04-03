@@ -94,4 +94,5 @@ public class MenuAction extends CommonAction<Menu> {
         list2json(list, jsonConfig);
         return NONE;
     }
+    
 }

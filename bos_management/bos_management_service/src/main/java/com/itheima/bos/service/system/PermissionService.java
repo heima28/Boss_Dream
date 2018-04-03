@@ -1,5 +1,7 @@
 package com.itheima.bos.service.system;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +18,5 @@ public interface PermissionService {
     void save(Permission permission);
 
     Page<Permission> findAll(Pageable pageable);
+
 }
