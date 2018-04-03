@@ -126,7 +126,8 @@ public class WaybillAction extends CommonAction<WayBill> {
     	
     	wayBillService.save(list);
     	workbook.close();
-    	System.out.println("保存运单成功!");
+    	System.out.println("保存运单成功");
+    	System.out.println("");
     	
     	 HttpServletResponse response = ServletActionContext.getResponse();
          response.setContentType("application/json;charset=UTF-8");
